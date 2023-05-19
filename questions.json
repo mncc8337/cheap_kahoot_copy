@@ -4,27 +4,69 @@
         "image": "no",
         "answer": "2",
         "other_answer": ["1", "3", "4"],
-        "time": 15
+        "time": 10
     },
     {
         "question": "999*5543 - 2412635 / (234289+2343-8877) = ?",
         "image": "no",
         "answer": "5537446.4",
         "other_answer": ["12414", "0", "9999"],
-        "time": 15
+        "time": 10
     },
     {
         "question": "?",
         "image": "static/image/con.png",
         "answer": "con ca tre",
         "other_answer": ["con cu", "con meo"],
-        "time": 15
+        "time": 10
     },
     {
         "question": "?",
         "image": "static/image/con_zoom.png",
         "answer": "con ca tre",
         "other_answer": ["con meo"],
-        "time": 15
+        "time": 10
+    },
+    {
+        "question": "con chi vua duc vua cai?",
+        "image": "no",
+        "answer": "con thang lan",
+        "other_answer": ["con trai", "con ki lan", "con bo tot"],
+        "time": 10
+    },
+    {
+        "question": "4! = ?",
+        "image": "no",
+        "answer": "24",
+        "other_answer": ["36", "120", "2! * 2"],
+        "time": 10
+    },
+    {
+        "question": "sau rieng laf",
+        "image": "no",
+        "answer": "durian",
+        "other_answer": ["papaya", "jackfruit", "con cac"],
+        "time": 10
+    },
+    {
+        "question": "ai beo",
+        "image": "no",
+        "answer": "me m",
+        "other_answer": ["con chim", "dua hau", "con bo tot"],
+        "time": 10
+    },
+    {
+        "question": "ai hoi",
+        "image": "no",
+        "answer": "t",
+        "other_answer": ["m", "bac ki", "nam ki"],
+        "time": 10
+    },
+    {
+        "question": "con chos?",
+        "image": "no",
+        "answer": "con chos",
+        "other_answer": ["meof", "con ca tre", "con cu"],
+        "time": 10
     }
 ]
