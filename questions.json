@@ -1,0 +1,30 @@
+[
+    {
+        "question": "1+1 = ?",
+        "image": "no",
+        "answer": "2",
+        "other_answer": ["1", "3", "4"],
+        "time": 15
+    },
+    {
+        "question": "999*5543 - 2412635 / (234289+2343-8877) = ?",
+        "image": "no",
+        "answer": "5537446.4",
+        "other_answer": ["12414", "0", "9999"],
+        "time": 15
+    },
+    {
+        "question": "?",
+        "image": "static/image/con.png",
+        "answer": "con ca tre",
+        "other_answer": ["con cu", "con meo"],
+        "time": 15
+    },
+    {
+        "question": "?",
+        "image": "static/image/con_zoom.png",
+        "answer": "con ca tre",
+        "other_answer": ["con meo"],
+        "time": 15
+    }
+]

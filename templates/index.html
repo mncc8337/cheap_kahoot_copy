@@ -1,0 +1,71 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<label>Teen</label><br>
+<input id="name"  type="name" placeholder="Name" name="NAME" required autofocus/>
+<button id="btn" onclick="submit()">voo</button>
+<p id="status"></p>
+
+<script>
+
+var status_display = document.getElementById("status");
+var name = "";
+function wait_for_server_respond() {
+    fetch("/players")
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+                return;
+            }
+            response.text().then(function(data) {
+                const json = JSON.parse(data);
+                const players = json["players"];
+                const declined = json["declined"];
+
+                var found_in_player_list = false;
+                players.forEach(function(value, index, array) {
+                    if(value == name) {
+                        found_in_player_list = true;
+                    }
+                })
+
+                var found_in_declined_list = false;
+                declined.forEach(function(value, index, array) {
+                    if(value == name) {
+                        found_in_declined_list = true;
+                    }
+                })
+
+                if(found_in_player_list) {
+                    status_display.innerHTML = "accepted to game";
+                        window.location.replace("/game/"+name);
+                }
+                else if(found_in_declined_list) {
+                    alert("request declined, pls change name");
+                    status_display.innerHTML = "request declined";
+                    return;
+                }
+                else {
+                    setTimeout(wait_for_server_respond, 100);
+                }
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
+}
+function submit() {
+    name = document.getElementById("name").value;
+    fetch("/player_request", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }, 
+        body: JSON.stringify({
+            name: name
+        })
+    });
+    setTimeout(wait_for_server_respond, 500);
+    status_display.innerHTML = "waiting for server respond";
+}
+</script>

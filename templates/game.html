@@ -1,0 +1,189 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div id="greeter">
+    <h1>Hi {{name}}</h1>
+    <p id="result"> waiting for gamestart signal</p>
+</div>
+<div id="buttons">
+    <div>
+        <p id="timer"></p>
+        <p id="ans">no answer</p>
+    </div>
+    <button class="ans-button" id="A" onclick="set_ans('A')">
+        <img src="{{url_for('static', filename='buttons/A.png')}}" align="middle">
+        <div class="centered">
+            A
+        </div>
+    </button>
+    <button class="ans-button" id="B" onclick="set_ans('B')">
+        <img src="{{url_for('static', filename='buttons/B.png')}}" align="middle">
+        <div class="centered">
+            B
+        </div>
+    </button><br>
+    <button class="ans-button" id="C" onclick="set_ans('C')">
+        <img src="{{url_for('static', filename='buttons/C.png')}}" align="middle">
+        <div class="centered">
+            C
+        </div>
+    </button>
+    <button class="ans-button" id="D" onclick="set_ans('D')">
+        <img src="{{url_for('static', filename='buttons/D.png')}}" align="middle">
+        <div class="centered">
+            D
+        </div>
+    </button>
+</div>
+
+<style>
+.ans-button {
+    position: relative;
+    text-align: center;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+</style>
+
+<script>
+var result = document.getElementById("result");
+var greeter = document.getElementById("greeter");
+var buttons = document.getElementById("buttons");
+
+var question_place = document.getElementById("question_place");
+var bA = document.getElementById("A");
+var bB = document.getElementById("B");
+var bC = document.getElementById("C");
+var bD = document.getElementById("D");
+
+greeter.style.display = "block";
+buttons.style.display = "none";
+
+// game var
+var layout = 4;
+var time = 30;
+var start_at = Math.round(Date.now() / 1000);
+var end_at;
+var timeout = false;
+var timer = document.getElementById("timer");
+var ans_indi = document.getElementById("ans");
+
+function set_ans(str) {
+    fetch("/post_answer", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }, 
+        body: JSON.stringify({
+            name: "{{name}}",
+            ans: str,
+            time: end_at - Math.round(Date.now() / 1000)
+        })
+    });
+    ans_indi.innerHTML = "current answer: " + str;
+    return "";
+}
+
+// when player exit the page
+onbeforeunload = function() {
+    fetch("/clear_player", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }, 
+        body: JSON.stringify({
+            name: "{{name}}"
+        })
+    });
+    return "";
+}
+
+function getPlayerScore() {
+    fetch('/playersinfo')
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+                return;
+            }
+            response.text().then(function(data) {
+                const json = JSON.parse(data)["{{name}}"];
+                return_val = json;
+                result.innerHTML = "score: " + json["score"];
+                setTimeout(getGameState, 10);
+                return;
+            });
+        }
+    )
+    .catch(function(err) { 
+        console.log('Fetch Error :-S', err);
+    });
+}
+
+function onTimeout() {
+    greeter.style.display = "block";
+    buttons.style.display = "none";
+
+    result.innerHTML = "";
+
+    timeout = true;
+
+    setTimeout(getPlayerScore, 1000);
+}
+
+function update_timer() {
+    if(timeout) {
+        timer.innerHTML = "";
+        return;
+    }
+    timer.innerHTML = (end_at - Math.round(Date.now() / 1000)).toFixed(0) + 's';
+    setTimeout(update_timer, 100);
+}
+
+function onGameStart() {
+    greeter.style.display = "none";
+    buttons.style.display = "block";
+
+    ans.innerHTML = "no answer";
+
+    start_at = Math.round(Date.now() / 1000);
+    end_at = start_at + time;
+
+    timeout = false;
+    update_timer();
+
+    setTimeout(onTimeout, time*1000);
+}
+
+// check if game started
+function getGameState() {
+    fetch('/gamestate')
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+                return;
+            }
+            response.text().then(function(data) {
+                const json = JSON.parse(data);
+                if (json["start"] == true) {
+                    layout = json["layout"];
+                    time = json["time"];
+                    onGameStart();
+                    return;
+                }
+                else {
+                    setTimeout(getGameState, 100);
+                }
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
+}
+setTimeout(getGameState, 10);
+</script>
