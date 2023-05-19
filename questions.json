@@ -68,5 +68,12 @@
         "answer": "con chos",
         "other_answer": ["meof", "con ca tre", "con cu"],
         "time": 10
+    },
+    {
+        "question": "con cac?",
+        "image": "no",
+        "answer": "cac",
+        "other_answer": ["dick", "slungush", "con cu"],
+        "time": 10
     }
 ]
